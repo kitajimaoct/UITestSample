@@ -1,0 +1,114 @@
+# gcloud args match the official gcloud cli
+# https://cloud.google.com/sdk/gcloud/reference/alpha/firebase/test/ios/run
+gcloud:
+  # -- GcloudYml --
+
+  ## The name of a Google Cloud Storage bucket where raw test results will be stored
+  # results-bucket: tmp_flank
+
+  ## The name of a unique Google Cloud Storage object within the results bucket where raw test results will be stored
+  ## (default: a timestamp with a random suffix).
+  # results-dir: tmp
+  results-dir: flank-uitest
+
+  ## Enable video recording during the test. Enabled by default, use --no-record-video to disable.
+  # record-video: true
+  record-video: true
+
+  ## The max time this test execution can run before it is cancelled (default: 15m).
+  ## It does not include any time necessary to prepare and clean up the target device.
+  ## The maximum possible testing time is 30m on physical devices and 60m on virtual devices.
+  ## The TIMEOUT units can be h, m, or s. If no unit is given, seconds are assumed.
+  # timeout: 30m
+
+  ## Invoke a test asynchronously without waiting for test results.
+  # async: false
+
+  ## The history name for your test results (an arbitrary string label; default: the application's label from the APK manifest).
+  ## All tests which use the same history name will have their results grouped together in the Firebase console in a time-ordered test history list.
+  # results-history-name: android-history
+
+  ## Experimental!
+  ## The number of times a TestExecution should be re-attempted if one or more\nof its test cases fail for any reason.
+  ## The maximum number of reruns allowed is 10. Default is 0, which implies no reruns.
+  # num-flaky-test-attempts: 0
+
+  # -- IosGcloudYml --
+
+  ## The path to the test package (a zip file containing the iOS app and XCTest files).
+  ## The given path may be in the local filesystem or in Google Cloud Storage using a URL beginning with gs://.
+  ## Note: any .xctestrun file in this zip file will be ignored if --xctestrun-file is specified.
+  #test: /Users/vagrant/testbundle.zip
+  test: $BITRISE_TEST_BUNDLE_ZIP_PATH
+
+  ## The path to an .xctestrun file that will override any .xctestrun file contained in the --test package.
+  ## Because the .xctestrun file contains environment variables along with test methods to run and/or ignore,
+  ## this can be useful for customizing or sharding test suites. The given path should be in the local filesystem.
+  ## Note: this path should usually be pointing to the xctestrun file within the derived data folder
+  xctestrun-file: $BITRISE_XCTESTRUN_FILE_PATH
+
+  ## The version of Xcode that should be used to run an XCTest.
+  ## Defaults to the latest Xcode version supported in Firebase Test Lab.
+  ## This Xcode version must be supported by all iOS versions selected in the test matrix.
+  # xcode-version: 10.1
+
+  ## A list of DIMENSION=VALUE pairs which specify a target device to test against.
+  ## This flag may be repeated to specify multiple devices.
+  ## The four device dimensions are: model, version, locale, and orientation.
+  # device:
+  #  - model: iphone8
+  #   version: 12.0
+  #   locale: en
+  #   orientation: portrait
+  # - model: iphonex
+  #   version: 12.0
+  #   locale: es_ES
+  #   orientation: landscape
+
+flank:
+  # -- FlankYml --
+
+  ## test shards - the amount of groups to split the test suite into
+  ## set to -1 to use one shard per test. default: 1
+  # max-test-shards: 1
+
+  ## shard time - the amount of time tests within a shard should take
+  ## when set to > 0, the shard count is dynamically set based on time up to the maxmimum limit defined by max-test-shards
+  ## 2 minutes (120) is recommended.
+  ## default: -1 (unlimited)
+  # shard-time: -1
+
+  ## The amount of times to run the tests.
+  ## 1 runs the tests once. 10 runs all the tests 10x
+  # num-test-runs: 1
+
+  ## Google cloud storage path to store the JUnit XML results from the last run.
+  # smart-flank-gcs-path: gs://tmp_flank/flank/test_app_ios.xml
+
+  ## Disables smart flank JUnit XML uploading. Useful for preventing timing data from being updated.
+  ## Default: false
+  # smart-flank-disable-upload: false
+
+  ## Disables sharding. Useful for parameterized tests.
+  # disable-sharding: false
+
+  ## always run - these tests are inserted at the beginning of every shard
+  ## useful if you need to grant permissions or login before other tests run
+  # test-targets-always-run:
+  #   - className/testName
+
+  ## regex is matched against bucket paths, for example: 2019-01-09_00:18:07.314000_hCMY/shard_0/EarlGreyExampleSwiftTests_iphoneos12.1-arm64e.xctestrun
+  # files-to-download:
+  #   - .*\.mp4$
+
+  # -- IosFlankYml --
+
+  ## test targets - a list of tests to run. omit to run all tests.
+  # test-targets:
+  #   - className/testName
+
+  ## The billing enabled Google Cloud Platform project name to use
+  # project: delta-essence-114723
+
+  ## Local folder to store the test result. Folder is DELETED before each run to ensure only artifacts from the new run are saved.
+  # local-result-dir: flank
