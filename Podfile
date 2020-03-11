@@ -6,6 +6,7 @@ target 'UITestSample' do
   use_frameworks!
 
   # Pods for UITestSample
+  pod 'YMTGetDeviceName'
 
   target 'UITestSampleTests' do
     inherit! :search_paths
